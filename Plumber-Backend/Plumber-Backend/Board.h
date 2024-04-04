@@ -11,21 +11,11 @@ private:
 	std::vector<Pipe> board;
 	
 	// for random board generation
-	enum start_pos {
-		left_top = 1,
-		left_down,
-		right_top,
-		right_down,
-	};
-
-	enum end_pos {
-		left_top = 1,
-		left_down,
-		right_top,
-		right_down,
-	};
+	int start_pos;
+	int end_pos;
 public:
-	Board();
+	Board() {};
+	void SetBoardSize(int& row, int& col);
 	void GenerateRandomBoard();
 	void PrintBoard();
 };

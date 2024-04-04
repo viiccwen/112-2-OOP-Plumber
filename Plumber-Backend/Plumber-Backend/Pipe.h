@@ -13,7 +13,7 @@ private:
 		X,
 	};
 public:
-	Pipe();
+	Pipe() {};
 	void RotatePipe(std::pair<int, int>& pos);
 };
 

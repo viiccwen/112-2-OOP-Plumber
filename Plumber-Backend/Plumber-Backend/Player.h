@@ -7,7 +7,7 @@ class Player {
 private:
 	std::pair<int, int> pos; // player's current position
 public:
-	Player();
+	Player() {};
 	void moveUp();
 	void moveDown();
 	void moveLeft();
