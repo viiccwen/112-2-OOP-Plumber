@@ -7,8 +7,8 @@
 class Game {
 private:
 	enum Type {
-		specific = 1,
-		random,
+		Specific = 1,
+		Random,
 	};
 
 	Board board;
@@ -19,9 +19,9 @@ public:
 
 	// parameters: <int>board row, <int>board col
 	void StartGame(int& row, int& col);
+	void Initialization(int& row, int& col);
 	void CheckWin();
 	void UpdateWater();
-	bool GenerateSolutionPath();
 };
 
 #endif _GAME_H_
