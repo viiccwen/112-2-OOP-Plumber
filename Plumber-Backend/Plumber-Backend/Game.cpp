@@ -2,18 +2,6 @@
 #include "Game.h"
 using namespace std;
 
-void Game::StartGame(int& row, int& col) {
-	// set size, pipe shape.
-	board.SetBoardSize(row, col);
-	
-	//board.GenerateRandomBoard();
-
-	/* game loop
-	while (1) {
-
-	}*/
-}
-
 void Game::ChooseMode() {
 	int type = 1;
 	int min = 3;	
@@ -46,4 +34,24 @@ void Game::ChooseMode() {
 	else {
 		cout << "There is wrong with the mode you choosed!\n";
 	}
+}
+
+void Game::Initialization(int& row, int& col) {
+	// set size, pipe shape.
+	board.SetBoardSize(row, col);
+	board.GenerateBoard();
+	
+}
+
+void Game::StartGame(int& row, int& col) {
+	Initialization(row, col);
+
+	
+	
+	board.PrintBoard();
+
+	/* game loop
+	while (1) {
+
+	}*/
 }
