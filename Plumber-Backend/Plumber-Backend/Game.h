@@ -22,6 +22,7 @@ public:
 	void Initialization(int& row, int& col);
 	void CheckWin();
 	void UpdateWater();
+
 };
 
 #endif _GAME_H_
