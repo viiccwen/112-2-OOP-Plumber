@@ -62,8 +62,7 @@ void Game::StartGame(int& row, int& col) {
 				}
 
 				if (player.isSpace(press)) {
-					/* TODO: rotate plumb */
-					cout << "press Space\n";
+					board.RotatePipe(player.pos.x, player.pos.y);
 				}
 
 				if (player.isUp(press)) {

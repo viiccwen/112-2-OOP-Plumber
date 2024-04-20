@@ -19,6 +19,10 @@ void Board::SetPipe(int x, int y, Type type, int rotation) {
 	board[x][y].SetRotation(rotation);
 }
 
+void Board::RotatePipe(int x, int y) {
+	board[x][y].RotatePipe();
+}
+
 void Board::GenerateBoard() {
 	board.assign(ROW, std::vector<Pipe>(COL));
 	isSolution.assign(ROW, std::vector<bool>(COL, false));

@@ -26,7 +26,7 @@ public:
 	int GetRotation() const;
 	void SetType(Type CurType);
 	void SetRotation(int CurRotation);
-	void RotatePipe(std::pair<int, int>& pos);
+	void RotatePipe();
 };
 
 #endif _PIPE_H_

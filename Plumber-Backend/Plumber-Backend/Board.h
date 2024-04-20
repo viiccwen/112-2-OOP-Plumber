@@ -26,8 +26,11 @@ private:
 public:
 	static int ROW;
 	static int COL;
+
+
 	void SetBoardSize(int& row, int& col);
 	void SetPipe(int x, int y, Type type, int rotation);
+	void RotatePipe(int x, int y);
 	void GenerateBoard();
 	void GenerateSolution(int start, int end);
 	void PrintBoard(const int& x, const int& y) const;
