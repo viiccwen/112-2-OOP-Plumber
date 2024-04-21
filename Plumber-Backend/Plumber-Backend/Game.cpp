@@ -4,7 +4,7 @@ using namespace std;
 
 void Game::ChooseMode() {
 	int type = 1;
-	int min = 3;	
+	int min = 3;
 	int max = 10;	// can edit
 	int N, M;
 
@@ -40,18 +40,49 @@ void Game::Initialization(int& row, int& col) {
 	// set size, pipe shape.
 	board.SetBoardSize(row, col);
 	board.GenerateBoard();
-	
+
 }
 
 void Game::StartGame(int& row, int& col) {
 	Initialization(row, col);
 
-	
-	
-	board.PrintBoard();
-
-	/* game loop
+	bool FirstTime= false;
 	while (1) {
+		if (FirstTime == false) {
+			FirstTime = true;
+			board.PrintBoard(player.pos.x, player.pos.y);
+		}
 
-	}*/
+		if (player.PressButton()) {
+			int press = player.GetInput();
+			if (press != 224) {
+
+				if (player.isEsc(press)) {
+					break;
+				}
+
+				if (player.isSpace(press)) {
+					board.RotatePipe(player.pos.x, player.pos.y);
+				}
+
+				if (player.isUp(press)) {
+					player.moveUp();
+				}
+
+				if (player.isDown(press)) {
+					player.moveDown();
+				}
+
+				if (player.isLeft(press)) {
+					player.moveLeft();
+				}
+
+				if (player.isRight(press)) {
+					player.moveRight();
+				}
+
+				board.PrintBoard(player.pos.x, player.pos.y);
+			}
+		}
+	}
 }

@@ -16,3 +16,11 @@ Type Pipe::GetType() const {
 int Pipe::GetRotation() const {
 	return rotation;
 }
+
+void Pipe::RotatePipe() {
+	if (type == Type::Cross) {
+		return;
+	}
+	rotation = (rotation + 90) % 360;
+	return;
+}

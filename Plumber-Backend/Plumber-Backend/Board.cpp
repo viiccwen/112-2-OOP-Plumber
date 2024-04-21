@@ -6,6 +6,9 @@
 #include<Windows.h>
 using namespace std;
 
+int Board::ROW = 0;
+int Board::COL = 0;
+
 void Board::SetBoardSize(int& row, int& col) {
 	ROW = row;
 	COL = col;
@@ -14,6 +17,10 @@ void Board::SetBoardSize(int& row, int& col) {
 void Board::SetPipe(int x, int y, Type type, int rotation) {
 	board[x][y].SetType(type);
 	board[x][y].SetRotation(rotation);
+}
+
+void Board::RotatePipe(int x, int y) {
+	board[x][y].RotatePipe();
 }
 
 void Board::GenerateBoard() {
@@ -54,8 +61,8 @@ void Board::GenerateSolution(int start, int end) {
 		int dir = 0; // 0 -> right, 1-> down
 		while (x != ROW - 1 || y != COL - 1) {
 			if (x == ROW - 1 || y == COL - 1) {
-				if(x == ROW - 1) isSolution[x][++y] = true;
-				else if(y == COL - 1) isSolution[++x][y] = true;
+				if (x == ROW - 1) isSolution[x][++y] = true;
+				else if (y == COL - 1) isSolution[++x][y] = true;
 
 				Type shape;
 				do {
@@ -101,37 +108,52 @@ void SetColor(int color = 7)
 	SetConsoleTextAttribute(hConsole, color);
 }
 
-void Board::PrintBoard() const {
+void Board::PrintBoard(const int& x, const int& y) const {
 	for (int row = 0; row < ROW; ++row) {
 		for (int times = 0; times < 3; ++times) {
 			for (int col = 0; col < COL; ++col) {
-				SetColor((isSolution[row][col]) ? 12 : 7); // color table is on notion.
+				for (int chr = 0; chr < 3; ++chr) {
+					/* TODO: Water path */
 
-				Type type = board[row][col].GetType();
-				int rotation = board[row][col].GetRotation();
+					// color table is on notion.
+					if (row == x && col == y) {
+						if (isSolution[row][col]) SetColor(CurPosition_SolutionPath_Color);
+						else SetColor(CurPosition_Color);
+					}
+					else if (isSolution[row][col]) SetColor(SolutionPath_Color);
+					else SetColor(Else_Color);
 
-				switch (type)
-				{
-				case Type::Straight:
-					cout << StraightShape[(rotation / 90) % 2][times];
-					break;
-				case Type::Corner:
-					cout << CornerShape[rotation / 90][times];
-					break;
-				case Type::TShape:
-					cout << TShape[rotation / 90][times];
-					break;
-				case Type::Cross:
-					cout << CrossShape[times];
-					break;
-				default:
-					break;
+
+					Type type = board[row][col].GetType();
+					int rotation = board[row][col].GetRotation();
+
+					switch (type)
+					{
+					case Type::Straight:
+						cout << StraightShape[(rotation / 90) % 2][times][chr];
+						break;
+					case Type::Corner:
+						cout << CornerShape[rotation / 90][times][chr];
+						break;
+					case Type::TShape:
+						cout << TShape[rotation / 90][times][chr];
+						break;
+					case Type::Cross:
+						cout << CrossShape[times][chr];
+						break;
+					default:
+						break;
+					}
+
+					SetColor(7);
 				}
-			
 				cout << ' ';
 			}
 			cout << '\n';
 		}
 		cout << '\n';
 	}
+
+	/* fix : Run out of the Screen */
+	cout << "\n\n\n\n\n";
 }
