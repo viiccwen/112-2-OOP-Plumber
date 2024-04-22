@@ -3,6 +3,7 @@
 
 #include "Pipe.h"
 #include<vector>
+#include<queue>
 using namespace std;
 
 enum class Position {
@@ -34,6 +35,9 @@ public:
 	void GenerateBoard();
 	void GenerateSolution(int start, int end);
 	void PrintBoard(const int& x, const int& y) const;
+	void InjectWater();
+
+	bool IsGameOver();
 
 private:
 	vector<vector<Pipe>> board;
@@ -89,6 +93,7 @@ private:
 		"PPP",
 		"#P#"
 	};
+	int directions[4][2] = { {0,-1}, {1,0}, {0,1}, {-1,0} };
 };
 
 #endif _BOARD_H_

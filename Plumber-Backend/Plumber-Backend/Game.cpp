@@ -80,9 +80,14 @@ void Game::StartGame(int& row, int& col) {
 				if (player.isRight(press)) {
 					player.moveRight();
 				}
-
+				board.InjectWater();
 				board.PrintBoard(player.pos.x, player.pos.y);
 			}
+		}
+
+		if (board.IsGameOver()) {
+			cout << "Stage Clear!\n";
+			break;
 		}
 	}
 }
