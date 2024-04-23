@@ -51,7 +51,6 @@ void Game::ChooseMode() {
 					}
 				}
 
-
 				board.SetBoardSize(N, M);
 				board.SetupBoard(board_vec);
 				break;
@@ -63,14 +62,14 @@ void Game::ChooseMode() {
 			cout << "There is wrong with the mode you choosed!\n";
 		}
 	}
-
-	
 	StartGame();
 }
 
 void Game::StartGame() {
 	bool FirstTime = false;
 	while (1) {
+		board.InjectWater();
+
 		if (FirstTime == false) {
 			FirstTime = true;
 			board.PrintBoard(player.pos.x, player.pos.y);
@@ -103,7 +102,7 @@ void Game::StartGame() {
 				if (player.isRight(press)) {
 					player.moveRight();
 				}
-				board.InjectWater();
+				
 				board.PrintBoard(player.pos.x, player.pos.y);
 			}
 		}

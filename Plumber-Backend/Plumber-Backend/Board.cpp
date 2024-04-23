@@ -44,11 +44,11 @@ void Board::GenerateBoard() {
 	isSolution[0][0] = true;
 
 	int start, end;
-	start_pos = Position::LeftUp;
-	end_pos = Position::RightDown;
+	startCorner = Corner::LeftUp;
+	endCorner = Corner::RightDown;
 
 	/* TODO: need to make every position */
-	GenerateSolution(static_cast<int>(start_pos), static_cast<int>(end_pos));
+	GenerateSolution(static_cast<int>(startCorner), static_cast<int>(endCorner));
 
 	srand(time(NULL));
 	for (int row = 0; row < ROW; ++row) {
@@ -224,5 +224,5 @@ void Board::InjectWater(){
 }
 
 bool Board::IsGameOver() {
-	return board[ROW - 1][COL - 1].GetWatered() && board[ROW - 1][COL - 1].GetConnected()[1];
+	return board[ROW - 1][COL - 1].GetWatered();
 }

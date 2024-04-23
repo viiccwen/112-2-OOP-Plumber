@@ -16,11 +16,7 @@ private:
 public:
 	Game() {};
 	void ChooseMode();
-
 	void StartGame();
-	void CheckWin();
-	void UpdateWater();
-
 };
 
 #endif _GAME_H_
