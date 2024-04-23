@@ -1,6 +1,6 @@
 #ifndef _GAME_H_
 #define _GAME_H_
-
+#include <fstream>
 #include "Board.h"
 #include "Player.h"
 
@@ -17,9 +17,7 @@ public:
 	Game() {};
 	void ChooseMode();
 
-	// parameters: <int>board row, <int>board col
-	void StartGame(int& row, int& col);
-	void Initialization(int& row, int& col);
+	void StartGame();
 	void CheckWin();
 	void UpdateWater();
 
