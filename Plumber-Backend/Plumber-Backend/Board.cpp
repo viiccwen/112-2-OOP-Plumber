@@ -34,6 +34,8 @@ void Board::SetupBoard(vector<vector<char>> board_vec) {
 			SetPipe(row, col, pipe_pair.first, pipe_pair.second);
 		}
 	}
+
+	GenerateSolution(0, 0);
 }
 
 void Board::GenerateBoard() {
@@ -41,23 +43,87 @@ void Board::GenerateBoard() {
 	isSolution.assign(ROW, std::vector<bool>(COL, false));
 
 	/* TODO: need to more flexible */
-	isSolution[0][0] = true;
 
 	int start, end;
 	start_pos = Position::LeftUp;
 	end_pos = Position::RightDown;
 
-	/* TODO: need to make every position */
-	GenerateSolution(static_cast<int>(start_pos), static_cast<int>(end_pos));
-
 	srand(time(NULL));
 	for (int row = 0; row < ROW; ++row) {
 		for (int col = 0; col < COL; ++col) {
-			if (isSolution[row][col] == false) {
-				Type type = static_cast<Type>(rand() % 4);
-				int rotation = (rand() % 4) * 90;
+			if (row == 0 && col == 0) {
+				Type type = Type::Cross;
+				int rotation = 0;
 				SetPipe(row, col, type, rotation);
+				continue;
 			}
+
+			Type type = static_cast<Type>(rand() % 4);
+			int rotation = (rand() % 4) * 90;
+			SetPipe(row, col, type, rotation);
+		}
+	}
+
+	/* TODO: need to make every position */
+	GenerateSolution(static_cast<int>(start_pos), static_cast<int>(end_pos));
+}
+
+bool Board::FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>> temp_solution, vector<pair<int, int>>& solution, vector<vector<bool>>& visited) {
+
+	// right down left up
+	pair<int, int> dir[4] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
+
+	int curX = cur_pos.first;
+	int curY = cur_pos.second;
+	
+	temp_solution.push_back({ curX, curY });
+	visited[curX][curY] = true;
+
+	if (curX == end_pos.first && curY == end_pos.second) {
+		solution = temp_solution;
+		return true;
+	}
+	
+	Pipe curPipe = board[curX][curY];
+
+	for (int i = 0; i < 4; i++) {
+		if (!curPipe.GetConnected()[i]) continue;
+
+		int nextX = curX + dir[i].first;
+		int nextY = curY + dir[i].second;
+
+		if (nextX < 0 || nextX >= ROW) continue;
+		if (nextY < 0 || nextY >= COL) continue;
+		if (visited[nextX][nextY]) continue;
+
+		Pipe nextPipe = board[nextX][nextY];
+		int rotation_limit = 1;
+
+		switch (nextPipe.GetType())
+		{
+		case Type::Straight:
+			rotation_limit = 2;
+			break;
+		case Type::TShape:
+			rotation_limit = 4;
+			break;
+		case Type::Corner:
+			rotation_limit = 4;
+			break;
+		case Type::Cross:
+			rotation_limit = 1;
+			break;
+		default:
+			break;
+		}
+
+		for (int j = 0; j < rotation_limit; ++j) {
+			int rotation = j * 90;
+			nextPipe.SetRotation(rotation);
+
+			if ( !nextPipe.GetConnected()[(i + 2) % 4] ) continue;
+			
+			if ( FindSolutionPath({ nextX, nextY }, end_pos, temp_solution, solution, visited) ) return true;
 		}
 	}
 }
@@ -67,50 +133,16 @@ void Board::GenerateSolution(int start, int end) {
 	srand(time(NULL));
 
 	/* TODO: need to make every position */
-	if (start == 0 && end == 3) {
-		int x = 0, y = 0;
-		board[x][y].SetType(static_cast<Type>(3));
-		board[x][y].SetRotation(0);
+	vector<pair<int, int>> temp_solution;
+	vector<pair<int, int>> solution;
+	pair<int, int> end_pos = { ROW - 1, COL - 1 };
+	vector<vector<bool>> visited(ROW, vector<bool>(COL, false));
 
-		int dir = 0; // 0 -> right, 1-> down
-		while (x != ROW - 1 || y != COL - 1) {
-			if (x >= ROW - 1 || y >= COL - 1) {
-				if (x == ROW - 1) isSolution[x][++y] = true;
-				else if (y == COL - 1) isSolution[++x][y] = true;
-
-				Type shape;
-				do {
-					shape = static_cast<Type>(rand() % 4);
-				} while (shape == Type::Corner || shape == Type::Straight);
-
-				SetPipe(x, y, shape, (rand() % 4) * 90);
-			}
-			else {
-				if (dir == 0) isSolution[x][++y] = true;
-				else isSolution[++x][y] = true;
-
-				Type shape = static_cast<Type>(rand() % 4);
-				SetPipe(x, y, shape, (rand() % 4) * 90);
-
-				switch (shape)
-				{
-				case Type::Straight:
-					break;
-				case Type::Corner:
-					dir = (dir + 1) % 2;
-					break;
-				case Type::TShape:
-					dir = rand() % 2;
-					break;
-				case Type::Cross:
-					dir = rand() % 2;
-					break;
-				default:
-					break;
-				}
-			}
-		}
-
+	/* TODO: need more flexible writing */
+	FindSolutionPath({ 0, 0 }, end_pos, temp_solution, solution, visited);
+	
+	for (auto pir : solution) {
+		isSolution[pir.first][pir.second] = true;
 	}
 }
 
@@ -224,5 +256,5 @@ void Board::InjectWater(){
 }
 
 bool Board::IsGameOver() {
-	return board[ROW - 1][COL - 1].GetWatered() && board[ROW - 1][COL - 1].GetConnected()[1];
+	return board[ROW - 1][COL - 1].GetWatered();
 }
