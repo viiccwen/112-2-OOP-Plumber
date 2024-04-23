@@ -2,10 +2,13 @@
 #define _BOARD_H_
 
 #include "Pipe.h"
+#include "Player.h"
 #include<vector>
+#include<queue>
+
 using namespace std;
 
-enum class Position {
+enum class Corner {
 	LeftUp,
 	LeftDown,
 	RightUp,
@@ -15,8 +18,11 @@ enum class Position {
 class Board {
 private:
 	// for random board generation
-	Position start_pos;
-	Position end_pos;
+	Corner startCorner;
+	Corner endCorner;
+
+	POS startPosition;
+	POS endPosition;
 
 	int WaterPath_Color = 159;
 	int CurPosition_SolutionPath_Color = 236;
@@ -26,66 +32,22 @@ private:
 public:
 	static int ROW;
 	static int COL;
+
 	void SetBoardSize(int& row, int& col);
 	void SetPipe(int x, int y, Type type, int rotation);
+	void RotatePipe(int x, int y);
 	void GenerateBoard();
+	void SetupBoard(vector<vector<char>> board_vec);
 	void GenerateSolution(int start, int end);
 	void PrintBoard(const int& x, const int& y) const;
+	void InjectWater();
 
+	bool IsGameOver();
 private:
 	vector<vector<Pipe>> board;
 	vector<vector<bool>> isSolution;
-	vector<vector<string>> StraightShape = {
-		{	"###",
-			"PPP",
-			"###" },
-		{
-			"#P#",
-			"#P#",
-			"#P#"}
-	};
 
-	vector<vector<string>> CornerShape = {
-		{	"#P#",
-			"#PP",
-			"###"},
-		{
-			"###",
-			"#PP",
-			"#P#"},
-		{
-			"###",
-			"PP#",
-			"#P#"},
-		{
-			"#P#",
-			"PP#",
-			"###"},
-	};
-
-	vector<vector<string>> TShape = {
-		{	"###",
-			"PPP",
-			"#P#"},
-		{
-			"#P#",
-			"PP#",
-			"#P#"},
-		{
-			"#P#",
-			"PPP",
-			"###"},
-		{
-			"#P#",
-			"#PP",
-			"#P#"},
-	};
-
-	vector<string> CrossShape = {
-		"#P#",
-		"PPP",
-		"#P#"
-	};
+	int directions[4][2] = { {0,-1}, {1,0}, {0,1}, {-1,0} };
 };
 
 #endif _BOARD_H_

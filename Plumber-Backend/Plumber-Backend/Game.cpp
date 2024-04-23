@@ -8,46 +8,68 @@ void Game::ChooseMode() {
 	int max = 10;	// can edit
 	int N, M;
 
-	cout << "Choose Mode: (1) type N*M (2) random N*M : ";
-	cin >> type;
+	while (true) {
+		cout << "Choose Mode: (1) type N*M (2) random N*M (3) read file : ";
+		cin >> type;
 
-	if (type == 1) {
-		cout << "Give the N (N>=3) : ";
-		cin >> N;
-		cout << "Give the M (M>=3) : ";
-		cin >> M;
+		if (type == 1) {
+			cout << "Give the N (N>=3) : ";
+			cin >> N;
+			cout << "Give the M (M>=3) : ";
+			cin >> M;
 
-		if (N < 3 || M < 3) {
-			cout << "There is wrong with your boundary!\n";
-			return;
+			if (N < 3 || M < 3) {
+				cout << "There is wrong with your boundary!\n";
+			}
+			else {
+				board.SetBoardSize(N, M);
+				board.GenerateBoard();
+				break;
+			}
 		}
+		else if (type == 2) {
+			srand(time(NULL));
+			N = rand() % (max - min + 1) + min;
+			M = rand() % (max - min + 1) + min;
+			board.SetBoardSize(N, M);
+			board.GenerateBoard();
+			break;
+		}
+		else if (type == 3) {
+			ifstream in("board.txt");
 
-		StartGame(N, M);
-	}
-	else if (type == 2) {
-		srand(time(NULL));
-		N = rand() % (max - min + 1) + min;
-		M = rand() % (max - min + 1) + min;
+			in >> N >> M;
+			if (N < 3 || M < 3) {
+				cout << "There is wrong with your boundary!\n";
+			}
+			else {
+				vector<vector<char>> board_vec(N * 3, vector<char>(M * 3));
+				/* TODO: read board */
+				for (int row = 0; row < N * 3; ++row) {
+					for (int col = 0; col < M * 3; ++col) {
+						in >> board_vec[row][col];
+					}
+				}
 
-		StartGame(N, M);
+				board.SetBoardSize(N, M);
+				board.SetupBoard(board_vec);
+				break;
+			}
+
+			in.close();
+		}
+		else {
+			cout << "There is wrong with the mode you choosed!\n";
+		}
 	}
-	else {
-		cout << "There is wrong with the mode you choosed!\n";
-	}
+	StartGame();
 }
 
-void Game::Initialization(int& row, int& col) {
-	// set size, pipe shape.
-	board.SetBoardSize(row, col);
-	board.GenerateBoard();
-
-}
-
-void Game::StartGame(int& row, int& col) {
-	Initialization(row, col);
-
-	bool FirstTime= false;
+void Game::StartGame() {
+	bool FirstTime = false;
 	while (1) {
+		board.InjectWater();
+
 		if (FirstTime == false) {
 			FirstTime = true;
 			board.PrintBoard(player.pos.x, player.pos.y);
@@ -62,8 +84,7 @@ void Game::StartGame(int& row, int& col) {
 				}
 
 				if (player.isSpace(press)) {
-					/* TODO: rotate plumb */
-					cout << "press Space\n";
+					board.RotatePipe(player.pos.x, player.pos.y);
 				}
 
 				if (player.isUp(press)) {
@@ -81,9 +102,14 @@ void Game::StartGame(int& row, int& col) {
 				if (player.isRight(press)) {
 					player.moveRight();
 				}
-
+				
 				board.PrintBoard(player.pos.x, player.pos.y);
 			}
+		}
+
+		if (board.IsGameOver()) {
+			cout << "Stage Clear!\n";
+			break;
 		}
 	}
 }

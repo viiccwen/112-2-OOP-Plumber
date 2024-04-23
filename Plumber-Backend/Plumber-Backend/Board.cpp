@@ -19,6 +19,23 @@ void Board::SetPipe(int x, int y, Type type, int rotation) {
 	board[x][y].SetRotation(rotation);
 }
 
+void Board::RotatePipe(int x, int y) {
+	board[x][y].RotatePipe();
+}
+
+void Board::SetupBoard(vector<vector<char>> board_vec) {
+	board.assign(ROW, std::vector<Pipe>(COL));
+	isSolution.assign(ROW, std::vector<bool>(COL, false));
+
+	for (int row = 0; row < ROW; ++row) {
+		for (int col = 0; col < COL; ++col) {
+			pair<Type, int> pipe_pair;
+			pipe_pair = Pipe::DetectPipe(board_vec, {row, col});
+			SetPipe(row, col, pipe_pair.first, pipe_pair.second);
+		}
+	}
+}
+
 void Board::GenerateBoard() {
 	board.assign(ROW, std::vector<Pipe>(COL));
 	isSolution.assign(ROW, std::vector<bool>(COL, false));
@@ -27,11 +44,11 @@ void Board::GenerateBoard() {
 	isSolution[0][0] = true;
 
 	int start, end;
-	start_pos = Position::LeftUp;
-	end_pos = Position::RightDown;
+	startCorner = Corner::LeftUp;
+	endCorner = Corner::RightDown;
 
 	/* TODO: need to make every position */
-	GenerateSolution(static_cast<int>(start_pos), static_cast<int>(end_pos));
+	GenerateSolution(static_cast<int>(startCorner), static_cast<int>(endCorner));
 
 	srand(time(NULL));
 	for (int row = 0; row < ROW; ++row) {
@@ -45,6 +62,7 @@ void Board::GenerateBoard() {
 	}
 }
 
+/* HOTFIX: BUG with generateSolution */
 void Board::GenerateSolution(int start, int end) {
 	srand(time(NULL));
 
@@ -56,14 +74,14 @@ void Board::GenerateSolution(int start, int end) {
 
 		int dir = 0; // 0 -> right, 1-> down
 		while (x != ROW - 1 || y != COL - 1) {
-			if (x == ROW - 1 || y == COL - 1) {
+			if (x >= ROW - 1 || y >= COL - 1) {
 				if (x == ROW - 1) isSolution[x][++y] = true;
 				else if (y == COL - 1) isSolution[++x][y] = true;
 
 				Type shape;
 				do {
 					shape = static_cast<Type>(rand() % 4);
-				} while (shape == Type::Corner);
+				} while (shape == Type::Corner || shape == Type::Straight);
 
 				SetPipe(x, y, shape, (rand() % 4) * 90);
 			}
@@ -104,14 +122,36 @@ void SetColor(int color = 7)
 	SetConsoleTextAttribute(hConsole, color);
 }
 
+
 void Board::PrintBoard(const int& x, const int& y) const {
+	system("cls");
 	for (int row = 0; row < ROW; ++row) {
 		for (int times = 0; times < 3; ++times) {
 			for (int col = 0; col < COL; ++col) {
 				for (int chr = 0; chr < 3; ++chr) {
-					/* TODO: Water path */
+					Type type = board[row][col].GetType();
+					int rotation = board[row][col].GetRotation();
 
-					// color table is on notion.
+					char curChar = '#';
+
+					switch (type)
+					{
+					case Type::Straight:
+						curChar = Pipe::StraightShape[(rotation / 90) % 2][times][chr];
+						break;
+					case Type::Corner:
+						curChar = Pipe::CornerShape[rotation / 90][times][chr];
+						break;
+					case Type::TShape:
+						curChar = Pipe::TShape[rotation / 90][times][chr];
+						break;
+					case Type::Cross:
+						curChar = Pipe::CrossShape[times][chr];
+						break;
+					default:
+						break;
+					}
+
 					if (row == x && col == y) {
 						if (isSolution[row][col]) SetColor(CurPosition_SolutionPath_Color);
 						else SetColor(CurPosition_Color);
@@ -119,27 +159,8 @@ void Board::PrintBoard(const int& x, const int& y) const {
 					else if (isSolution[row][col]) SetColor(SolutionPath_Color);
 					else SetColor(Else_Color);
 
-
-					Type type = board[row][col].GetType();
-					int rotation = board[row][col].GetRotation();
-
-					switch (type)
-					{
-					case Type::Straight:
-						cout << StraightShape[(rotation / 90) % 2][times][chr];
-						break;
-					case Type::Corner:
-						cout << CornerShape[rotation / 90][times][chr];
-						break;
-					case Type::TShape:
-						cout << TShape[rotation / 90][times][chr];
-						break;
-					case Type::Cross:
-						cout << CrossShape[times][chr];
-						break;
-					default:
-						break;
-					}
+					if (board[row][col].GetWatered() && curChar == 'P') SetColor(WaterPath_Color);
+					cout << curChar;
 
 					SetColor(7);
 				}
@@ -150,6 +171,58 @@ void Board::PrintBoard(const int& x, const int& y) const {
 		cout << '\n';
 	}
 
-	/* fix : Run out of the Screen */
-	cout << "\n\n\n\n\n";
+	
+}
+
+void Board::InjectWater(){
+	for (int row = 0; row < ROW; ++row) {
+		for (int col = 0; col < COL; ++col) {
+			board[row][col].SetWatered(false);
+		}
+	}
+
+	/* TODO: need every start point and end point*/
+
+	int startX = 0;
+	int startY = 0;
+
+	if (!board[0][0].GetConnected()[3]) return;
+
+	queue<pair<int, int>> q;
+
+	q.push({ startX,startY });
+	board[0][0].SetWatered(true);
+
+	while (!q.empty()) {
+		pair<int, int> current = q.front();
+		q.pop();
+		
+		int curX = current.first;
+		int curY = current.second;
+		Pipe curPipe = board[curY][curX];
+
+
+		for (int i = 0; i < 4; i++) {
+			if (!curPipe.GetConnected()[i]) continue;
+			
+			int nextX = curX + directions[i][0];
+			int nextY = curY + directions[i][1];
+
+			if (nextX < 0 || nextX >= COL) continue;
+			if (nextY < 0 || nextY >= ROW) continue;
+
+			Pipe nextPipe = board[nextY][nextX];
+			
+			if (nextPipe.GetWatered()) continue;
+			if (!nextPipe.GetConnected()[(i + 2) % 4]) continue;
+			
+			q.push({ nextX, nextY });
+			board[nextY][nextX].SetWatered(true);
+		}
+
+	}
+}
+
+bool Board::IsGameOver() {
+	return board[ROW - 1][COL - 1].GetWatered();
 }
