@@ -60,14 +60,14 @@ void Board::GenerateSolution(int start, int end) {
 
 		int dir = 0; // 0 -> right, 1-> down
 		while (x != ROW - 1 || y != COL - 1) {
-			if (x == ROW - 1 || y == COL - 1) {
+			if (x >= ROW - 1 || y >= COL - 1) {
 				if (x == ROW - 1) isSolution[x][++y] = true;
 				else if (y == COL - 1) isSolution[++x][y] = true;
 
 				Type shape;
 				do {
 					shape = static_cast<Type>(rand() % 4);
-				} while (shape == Type::Corner);
+				} while (shape == Type::Corner || shape == Type::Straight);
 
 				SetPipe(x, y, shape, (rand() % 4) * 90);
 			}
@@ -110,6 +110,7 @@ void SetColor(int color = 7)
 
 
 void Board::PrintBoard(const int& x, const int& y) const {
+	system("cls");
 	for (int row = 0; row < ROW; ++row) {
 		for (int times = 0; times < 3; ++times) {
 			for (int col = 0; col < COL; ++col) {
@@ -156,7 +157,7 @@ void Board::PrintBoard(const int& x, const int& y) const {
 		cout << '\n';
 	}
 
-	cout << "\n\n\n\n\n";
+	
 }
 
 void Board::InjectWater(){
