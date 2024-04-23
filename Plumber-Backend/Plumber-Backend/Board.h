@@ -33,6 +33,7 @@ public:
 	void SetPipe(int x, int y, Type type, int rotation);
 	void RotatePipe(int x, int y);
 	void GenerateBoard();
+	void SetupBoard(vector<vector<char>> board_vec);
 	void GenerateSolution(int start, int end);
 	void PrintBoard(const int& x, const int& y) const;
 	void InjectWater();
@@ -42,57 +43,7 @@ public:
 private:
 	vector<vector<Pipe>> board;
 	vector<vector<bool>> isSolution;
-	vector<vector<string>> StraightShape = {
-		{	"###",
-			"PPP",
-			"###" },
-		{
-			"#P#",
-			"#P#",
-			"#P#"}
-	};
 
-	vector<vector<string>> CornerShape = {
-		{	"#P#",
-			"#PP",
-			"###"},
-		{
-			"###",
-			"#PP",
-			"#P#"},
-		{
-			"###",
-			"PP#",
-			"#P#"},
-		{
-			"#P#",
-			"PP#",
-			"###"},
-	};
-
-	vector<vector<string>> TShape = {
-		{	"###",
-			"PPP",
-			"#P#"},
-		{
-			"#P#",
-			"PP#",
-			"#P#"},
-		{
-			"#P#",
-			"PPP",
-			"###"},
-		{
-			"#P#",
-			"#PP",
-			"#P#"},
-	};
-
-	vector<string> CrossShape = {
-		"#P#",
-		"PPP",
-		"#P#"
-	};
 	int directions[4][2] = { {0,-1}, {1,0}, {0,1}, {-1,0} };
 };
 

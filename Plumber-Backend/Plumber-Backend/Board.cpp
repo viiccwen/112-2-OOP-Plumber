@@ -23,6 +23,19 @@ void Board::RotatePipe(int x, int y) {
 	board[x][y].RotatePipe();
 }
 
+void Board::SetupBoard(vector<vector<char>> board_vec) {
+	board.assign(ROW, std::vector<Pipe>(COL));
+	isSolution.assign(ROW, std::vector<bool>(COL, false));
+
+	for (int row = 0; row < ROW; ++row) {
+		for (int col = 0; col < COL; ++col) {
+			pair<Type, int> pipe_pair;
+			pipe_pair = Pipe::DetectPipe(board_vec, {row, col});
+			SetPipe(row, col, pipe_pair.first, pipe_pair.second);
+		}
+	}
+}
+
 void Board::GenerateBoard() {
 	board.assign(ROW, std::vector<Pipe>(COL));
 	isSolution.assign(ROW, std::vector<bool>(COL, false));
@@ -49,6 +62,7 @@ void Board::GenerateBoard() {
 	}
 }
 
+/* HOTFIX: BUG with generateSolution */
 void Board::GenerateSolution(int start, int end) {
 	srand(time(NULL));
 
@@ -123,16 +137,16 @@ void Board::PrintBoard(const int& x, const int& y) const {
 					switch (type)
 					{
 					case Type::Straight:
-						curChar = StraightShape[(rotation / 90) % 2][times][chr];
+						curChar = Pipe::StraightShape[(rotation / 90) % 2][times][chr];
 						break;
 					case Type::Corner:
-						curChar = CornerShape[rotation / 90][times][chr];
+						curChar = Pipe::CornerShape[rotation / 90][times][chr];
 						break;
 					case Type::TShape:
-						curChar = TShape[rotation / 90][times][chr];
+						curChar = Pipe::TShape[rotation / 90][times][chr];
 						break;
 					case Type::Cross:
-						curChar = CrossShape[times][chr];
+						curChar = Pipe::CrossShape[times][chr];
 						break;
 					default:
 						break;
