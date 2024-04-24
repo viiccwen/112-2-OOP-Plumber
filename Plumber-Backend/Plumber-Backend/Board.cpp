@@ -45,8 +45,8 @@ void Board::GenerateBoard() {
 	/* TODO: need to more flexible */
 
 	int start, end;
-	start_pos = Position::LeftUp;
-	end_pos = Position::RightDown;
+	startCorner = Corner::LeftUp;
+	endCorner = Corner::RightDown;
 
 	srand(time(NULL));
 	for (int row = 0; row < ROW; ++row) {

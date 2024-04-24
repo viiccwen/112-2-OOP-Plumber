@@ -2,11 +2,13 @@
 #define _BOARD_H_
 
 #include "Pipe.h"
+#include "Player.h"
 #include<vector>
 #include<queue>
+
 using namespace std;
 
-enum class Position {
+enum class Corner {
 	LeftUp,
 	LeftDown,
 	RightUp,
@@ -16,8 +18,11 @@ enum class Position {
 class Board {
 private:
 	// for random board generation
-	Position start_pos;
-	Position end_pos;
+	Corner startCorner;
+	Corner endCorner;
+
+	POS startPosition;
+	POS endPosition;
 
 	int WaterPath_Color = 159;
 	int CurPosition_SolutionPath_Color = 236;
@@ -27,7 +32,6 @@ private:
 public:
 	static int ROW;
 	static int COL;
-
 
 	void SetBoardSize(int& row, int& col);
 	void SetPipe(int x, int y, Type type, int rotation);
@@ -39,7 +43,6 @@ public:
 	void InjectWater();
 	bool FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>> temp_solution, vector<pair<int, int>>& solution, vector<vector<bool>>& visited);
 	bool IsGameOver();
-
 private:
 	vector<vector<Pipe>> board;
 	vector<vector<bool>> isSolution;

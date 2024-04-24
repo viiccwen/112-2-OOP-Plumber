@@ -6,10 +6,10 @@
 #include <conio.h>
 #include <Windows.h>
 
-struct POS {
+typedef struct{
 	int x = 0;
 	int y = 0;
-};
+} POS;
 
 class Player {
 private:
