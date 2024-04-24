@@ -41,7 +41,7 @@ public:
 	void GenerateSolution(int start, int end);
 	void PrintBoard(const int& x, const int& y) const;
 	void InjectWater();
-
+	bool FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>> temp_solution, vector<pair<int, int>>& solution, vector<vector<bool>>& visited);
 	bool IsGameOver();
 private:
 	vector<vector<Pipe>> board;
