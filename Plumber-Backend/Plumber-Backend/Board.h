@@ -21,8 +21,8 @@ private:
 	Corner startCorner;
 	Corner endCorner;
 
-	POS startPosition;
-	POS endPosition;
+	pair<int, int> startPosition;
+	pair<int, int> endPosition;
 
 	int WaterPath_Color = 159;
 	int CurPosition_SolutionPath_Color = 236;
@@ -38,7 +38,7 @@ public:
 	void RotatePipe(int x, int y);
 	void GenerateBoard();
 	void SetupBoard(vector<vector<char>> board_vec);
-	void GenerateSolution(int start, int end);
+	void GenerateSolution();
 	void PrintBoard(const int& x, const int& y) const;
 	void InjectWater();
 	bool FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>> temp_solution, vector<pair<int, int>>& solution, vector<vector<bool>>& visited);

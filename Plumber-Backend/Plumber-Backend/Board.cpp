@@ -35,7 +35,7 @@ void Board::SetupBoard(vector<vector<char>> board_vec) {
 		}
 	}
 
-	GenerateSolution(0, 0);
+	GenerateSolution();
 }
 
 void Board::GenerateBoard() {
@@ -65,7 +65,7 @@ void Board::GenerateBoard() {
 	}
 
 	/* TODO: need to make every position */
-	GenerateSolution(static_cast<int>(start_pos), static_cast<int>(end_pos));
+	GenerateSolution();
 }
 
 bool Board::FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>> temp_solution, vector<pair<int, int>>& solution, vector<vector<bool>>& visited) {
@@ -113,8 +113,6 @@ bool Board::FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, ve
 		case Type::Cross:
 			rotation_limit = 1;
 			break;
-		default:
-			break;
 		}
 
 		for (int j = 0; j < rotation_limit; ++j) {
@@ -129,7 +127,7 @@ bool Board::FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, ve
 }
 
 /* HOTFIX: BUG with generateSolution */
-void Board::GenerateSolution(int start, int end) {
+void Board::GenerateSolution() {
 	srand(time(NULL));
 
 	/* TODO: need to make every position */
