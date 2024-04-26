@@ -41,13 +41,14 @@ public:
 	void GenerateSolution();
 	void PrintBoard(const int& x, const int& y) const;
 	void InjectWater();
-	bool FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>> temp_solution, vector<pair<int, int>>& solution, vector<vector<bool>>& visited);
+	bool FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>>& solution, vector<vector<bool>>& visited);
 	bool IsGameOver();
 private:
 	vector<vector<Pipe>> board;
 	vector<vector<bool>> isSolution;
 
-	int directions[4][2] = { {0,-1}, {1,0}, {0,1}, {-1,0} };
+	//	up, right, down, left
+	vector<pair<int, int>> directions = { {-1, 0}, {0, 1}, {1,0}, {0,-1} };
 };
 
 #endif _BOARD_H_
