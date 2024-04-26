@@ -68,10 +68,9 @@ void Game::ChooseMode() {
 void Game::StartGame() {
 	bool FirstTime = false;
 	while (1) {
-		board.InjectWater();
-
 		if (FirstTime == false) {
 			FirstTime = true;
+			board.InjectWater();
 			board.PrintBoard(player.pos.x, player.pos.y);
 		}
 
@@ -103,6 +102,7 @@ void Game::StartGame() {
 					player.moveRight();
 				}
 				
+				board.InjectWater();
 				board.PrintBoard(player.pos.x, player.pos.y);
 			}
 		}
