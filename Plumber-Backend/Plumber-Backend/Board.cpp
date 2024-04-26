@@ -68,35 +68,30 @@ void Board::GenerateBoard() {
 	GenerateSolution();
 }
 
-bool Board::FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>> temp_solution, vector<pair<int, int>>& solution, vector<vector<bool>>& visited) {
-
-	// right down left up
-	pair<int, int> dir[4] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
-
+bool Board::FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>>& solution, vector<vector<bool>>& visited) {
 	int curX = cur_pos.first;
 	int curY = cur_pos.second;
 	
-	temp_solution.push_back({ curX, curY });
+	solution.push_back({ curX, curY });
 	visited[curX][curY] = true;
 
 	if (curX == end_pos.first && curY == end_pos.second) {
-		solution = temp_solution;
 		return true;
 	}
 	
-	Pipe curPipe = board[curX][curY];
+	Pipe curPipe = dup_board.board[curX][curY];
 
 	for (int i = 0; i < 4; i++) {
 		if (!curPipe.GetConnected()[i]) continue;
 
-		int nextX = curX + dir[i].first;
-		int nextY = curY + dir[i].second;
+		int nextX = curX + directions[i].first;
+		int nextY = curY + directions[i].second;
 
 		if (nextX < 0 || nextX >= ROW) continue;
 		if (nextY < 0 || nextY >= COL) continue;
 		if (visited[nextX][nextY]) continue;
 
-		Pipe nextPipe = board[nextX][nextY];
+		Pipe& nextPipe = dup_board.board[nextX][nextY];
 		int rotation_limit = 1;
 
 		switch (nextPipe.GetType())
@@ -119,9 +114,10 @@ bool Board::FindSolutionPath(pair<int, int> cur_pos, pair<int, int>& end_pos, ve
 			int rotation = j * 90;
 			nextPipe.SetRotation(rotation);
 
-			if ( !nextPipe.GetConnected()[(i + 2) % 4] ) continue;
+			if (!nextPipe.GetConnected()[(i + 2) % 4] ) continue;
+			if ( FindSolutionPath(dup_board, { nextX, nextY }, end_pos, solution, visited) ) return true;
 			
-			if ( FindSolutionPath({ nextX, nextY }, end_pos, temp_solution, solution, visited) ) return true;
+			solution.pop_back();
 		}
 	}
 }
@@ -131,13 +127,14 @@ void Board::GenerateSolution() {
 	srand(time(NULL));
 
 	/* TODO: need to make every position */
-	vector<pair<int, int>> temp_solution;
 	vector<pair<int, int>> solution;
 	pair<int, int> end_pos = { ROW - 1, COL - 1 };
 	vector<vector<bool>> visited(ROW, vector<bool>(COL, false));
 
 	/* TODO: need more flexible writing */
-	FindSolutionPath({ 0, 0 }, end_pos, temp_solution, solution, visited);
+	Board dup_board;
+	dup_board.board = board;
+	FindSolutionPath(dup_board, { 0, 0 }, end_pos, solution, visited);
 	
 	for (auto pir : solution) {
 		isSolution[pir.first][pir.second] = true;
@@ -155,6 +152,7 @@ void SetColor(int color = 7)
 
 void Board::PrintBoard(const int& x, const int& y) const {
 	system("cls");
+
 	for (int row = 0; row < ROW; ++row) {
 		for (int times = 0; times < 3; ++times) {
 			for (int col = 0; col < COL; ++col) {
@@ -200,8 +198,6 @@ void Board::PrintBoard(const int& x, const int& y) const {
 		}
 		cout << '\n';
 	}
-
-	
 }
 
 void Board::InjectWater(){
@@ -229,25 +225,25 @@ void Board::InjectWater(){
 		
 		int curX = current.first;
 		int curY = current.second;
-		Pipe curPipe = board[curY][curX];
+		Pipe curPipe = board[curX][curY];
 
 
 		for (int i = 0; i < 4; i++) {
 			if (!curPipe.GetConnected()[i]) continue;
 			
-			int nextX = curX + directions[i][0];
-			int nextY = curY + directions[i][1];
+			int nextX = curX + directions[i].first;
+			int nextY = curY + directions[i].second;
 
-			if (nextX < 0 || nextX >= COL) continue;
-			if (nextY < 0 || nextY >= ROW) continue;
+			if (nextX < 0 || nextX >= ROW) continue;
+			if (nextY < 0 || nextY >= COL) continue;
 
-			Pipe nextPipe = board[nextY][nextX];
+			Pipe nextPipe = board[nextX][nextY];
 			
 			if (nextPipe.GetWatered()) continue;
 			if (!nextPipe.GetConnected()[(i + 2) % 4]) continue;
 			
 			q.push({ nextX, nextY });
-			board[nextY][nextX].SetWatered(true);
+			board[nextX][nextY].SetWatered(true);
 		}
 
 	}
