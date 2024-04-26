@@ -28,11 +28,14 @@ private:
 	int CurPosition_SolutionPath_Color = 236;
 	int CurPosition_Color = 224;
 	int SolutionPath_Color = 12;
+	int EndPosition_Color = 160;
 	int Else_Color = 7;
 public:
 	static int ROW;
 	static int COL;
 
+	pair<int, int> GetStartPosition();
+	pair<int, int> GetEndPosition();
 	void SetBoardSize(int& row, int& col);
 	void SetPipe(int x, int y, Type type, int rotation);
 	void RotatePipe(int x, int y);
