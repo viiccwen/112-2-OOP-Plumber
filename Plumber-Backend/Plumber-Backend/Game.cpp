@@ -44,7 +44,6 @@ void Game::ChooseMode() {
 			}
 			else {
 				vector<vector<char>> board_vec(N * 3, vector<char>(M * 3));
-				/* TODO: read board */
 				for (int row = 0; row < N * 3; ++row) {
 					for (int col = 0; col < M * 3; ++col) {
 						in >> board_vec[row][col];
@@ -71,6 +70,9 @@ void Game::StartGame() {
 		if (FirstTime == false) {
 			FirstTime = true;
 			board.InjectWater();
+			pair<int, int> start_pos = board.GetStartPosition();
+			player.pos.x = start_pos.first;
+			player.pos.y = start_pos.second;
 			board.PrintBoard(player.pos.x, player.pos.y);
 		}
 

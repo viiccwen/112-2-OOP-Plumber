@@ -9,6 +9,10 @@ using namespace std;
 int Board::ROW = 0;
 int Board::COL = 0;
 
+pair<int, int> Board::GetStartPosition() {
+	return startPosition;
+}
+
 void Board::SetBoardSize(int& row, int& col) {
 	ROW = row;
 	COL = col;
@@ -30,7 +34,7 @@ void Board::SetupBoard(vector<vector<char>> board_vec) {
 	for (int row = 0; row < ROW; ++row) {
 		for (int col = 0; col < COL; ++col) {
 			pair<Type, int> pipe_pair;
-			pipe_pair = Pipe::DetectPipe(board_vec, {row, col});
+			pipe_pair = Pipe::DetectPipe(board_vec, { row, col });
 			SetPipe(row, col, pipe_pair.first, pipe_pair.second);
 		}
 	}
@@ -42,16 +46,52 @@ void Board::GenerateBoard() {
 	board.assign(ROW, std::vector<Pipe>(COL));
 	isSolution.assign(ROW, std::vector<bool>(COL, false));
 
-	/* TODO: need to more flexible */
-
-	int start, end;
-	startCorner = Corner::LeftUp;
-	endCorner = Corner::RightDown;
-
 	srand(time(NULL));
+
+	startCorner = static_cast<Corner>(rand() % 4);
+	do {
+		endCorner = static_cast<Corner>(rand() % 4);
+	} while (startCorner == endCorner);
+
+	switch (startCorner)
+	{
+	case Corner::LeftUp:
+		startPosition = { 0, 0 };
+		break;
+	case Corner::LeftDown:
+		startPosition = { ROW - 1, 0 };
+		break;
+	case Corner::RightUp:
+		startPosition = { 0, COL - 1 };
+		break;
+	case Corner::RightDown:
+		startPosition = { ROW - 1, COL - 1 };
+		break;
+	default:
+		break;
+	}
+
+	switch (endCorner)
+	{
+	case Corner::LeftUp:
+		endPosition = { 0, 0 };
+		break;
+	case Corner::LeftDown:
+		endPosition = { ROW - 1, 0 };
+		break;
+	case Corner::RightUp:
+		endPosition = { 0, COL - 1 };
+		break;
+	case Corner::RightDown:
+		endPosition = { ROW - 1, COL - 1 };
+		break;
+	default:
+		break;
+	}
+
 	for (int row = 0; row < ROW; ++row) {
 		for (int col = 0; col < COL; ++col) {
-			if (row == 0 && col == 0) {
+			if (row == startPosition.first && col == startPosition.second) {
 				Type type = Type::Cross;
 				int rotation = 0;
 				SetPipe(row, col, type, rotation);
@@ -64,21 +104,20 @@ void Board::GenerateBoard() {
 		}
 	}
 
-	/* TODO: need to make every position */
 	GenerateSolution();
 }
 
 bool Board::FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>>& solution, vector<vector<bool>>& visited) {
 	int curX = cur_pos.first;
 	int curY = cur_pos.second;
-	
+
 	solution.push_back({ curX, curY });
 	visited[curX][curY] = true;
 
 	if (curX == end_pos.first && curY == end_pos.second) {
 		return true;
 	}
-	
+
 	Pipe curPipe = dup_board.board[curX][curY];
 
 	for (int i = 0; i < 4; i++) {
@@ -114,31 +153,31 @@ bool Board::FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int,
 			int rotation = j * 90;
 			nextPipe.SetRotation(rotation);
 
-			if (!nextPipe.GetConnected()[(i + 2) % 4] ) continue;
-			if ( FindSolutionPath(dup_board, { nextX, nextY }, end_pos, solution, visited) ) return true;
-			
+			if (!nextPipe.GetConnected()[(i + 2) % 4]) continue;
+			if (FindSolutionPath(dup_board, { nextX, nextY }, end_pos, solution, visited)) return true;
+
 			solution.pop_back();
 		}
 	}
+
+	return false;
 }
 
-/* HOTFIX: BUG with generateSolution */
 void Board::GenerateSolution() {
 	srand(time(NULL));
 
-	/* TODO: need to make every position */
 	vector<pair<int, int>> solution;
-	pair<int, int> end_pos = { ROW - 1, COL - 1 };
 	vector<vector<bool>> visited(ROW, vector<bool>(COL, false));
 
-	/* TODO: need more flexible writing */
 	Board dup_board;
 	dup_board.board = board;
-	FindSolutionPath(dup_board, { 0, 0 }, end_pos, solution, visited);
-	
-	for (auto pir : solution) {
-		isSolution[pir.first][pir.second] = true;
+	if (FindSolutionPath(dup_board, startPosition, endPosition, solution, visited)) {
+		for (auto pir : solution) {
+			isSolution[pir.first][pir.second] = true;
+		}
 	}
+	else GenerateBoard();
+
 }
 
 // for color (from google)
@@ -180,7 +219,8 @@ void Board::PrintBoard(const int& x, const int& y) const {
 						break;
 					}
 
-					if (row == x && col == y) {
+					if (endPosition.first == row && endPosition.second == col) SetColor(EndPosition_Color);
+					else if (row == x && col == y) {
 						if (isSolution[row][col]) SetColor(CurPosition_SolutionPath_Color);
 						else SetColor(CurPosition_Color);
 					}
@@ -200,29 +240,27 @@ void Board::PrintBoard(const int& x, const int& y) const {
 	}
 }
 
-void Board::InjectWater(){
+void Board::InjectWater() {
 	for (int row = 0; row < ROW; ++row) {
 		for (int col = 0; col < COL; ++col) {
 			board[row][col].SetWatered(false);
 		}
 	}
 
-	/* TODO: need every start point and end point*/
+	int startX = startPosition.first;
+	int startY = startPosition.second;
 
-	int startX = 0;
-	int startY = 0;
-
-	if (!board[0][0].GetConnected()[3]) return;
+	if (!board[startX][startY].GetConnected()[3]) return;
 
 	queue<pair<int, int>> q;
 
 	q.push({ startX,startY });
-	board[0][0].SetWatered(true);
+	board[startX][startY].SetWatered(true);
 
 	while (!q.empty()) {
 		pair<int, int> current = q.front();
 		q.pop();
-		
+
 		int curX = current.first;
 		int curY = current.second;
 		Pipe curPipe = board[curX][curY];
@@ -230,7 +268,7 @@ void Board::InjectWater(){
 
 		for (int i = 0; i < 4; i++) {
 			if (!curPipe.GetConnected()[i]) continue;
-			
+
 			int nextX = curX + directions[i].first;
 			int nextY = curY + directions[i].second;
 
@@ -238,10 +276,10 @@ void Board::InjectWater(){
 			if (nextY < 0 || nextY >= COL) continue;
 
 			Pipe nextPipe = board[nextX][nextY];
-			
+
 			if (nextPipe.GetWatered()) continue;
 			if (!nextPipe.GetConnected()[(i + 2) % 4]) continue;
-			
+
 			q.push({ nextX, nextY });
 			board[nextX][nextY].SetWatered(true);
 		}
@@ -250,5 +288,5 @@ void Board::InjectWater(){
 }
 
 bool Board::IsGameOver() {
-	return board[ROW - 1][COL - 1].GetWatered();
+	return board[endPosition.first][endPosition.second].GetWatered();
 }
