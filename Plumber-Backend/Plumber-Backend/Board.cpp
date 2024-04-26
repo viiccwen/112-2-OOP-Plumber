@@ -30,6 +30,8 @@ void Board::RotatePipe(int x, int y) {
 void Board::SetupBoard(vector<vector<char>> board_vec) {
 	board.assign(ROW, std::vector<Pipe>(COL));
 	isSolution.assign(ROW, std::vector<bool>(COL, false));
+	startPosition = { 0, 0 };
+	endPosition = { ROW - 1, COL-1 };
 
 	for (int row = 0; row < ROW; ++row) {
 		for (int col = 0; col < COL; ++col) {
