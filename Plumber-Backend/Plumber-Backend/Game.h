@@ -17,6 +17,11 @@ public:
 	Game() {};
 	void ChooseMode();
 	void StartGame();
+
+	bool ServerChooseMode(int type, int n, int m);
+	bool ServerRotatePipe(int x, int y);
+	void ServerGetBoard();
+	
 };
 
 #endif _GAME_H_

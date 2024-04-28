@@ -5,7 +5,7 @@ using namespace std;
 void Game::ChooseMode() {
 	int type = 1;
 	int min = 3;
-	int max = 10;	// can edit
+	int max = 20;	// can edit
 	int N, M;
 
 	while (true) {
@@ -103,7 +103,7 @@ void Game::StartGame() {
 				if (player.isRight(press)) {
 					player.moveRight();
 				}
-				
+
 				board.InjectWater();
 				board.PrintBoard(player.pos.x, player.pos.y);
 			}
@@ -114,4 +114,71 @@ void Game::StartGame() {
 			break;
 		}
 	}
+}
+
+
+bool Game::ServerChooseMode(int type, int n = 3, int m = 3) {
+	int min = 3;
+	int max = 20;
+	int N, M;
+
+	if (type == 1) {
+		N = n;
+		M = m;
+
+		if (N < 3 || M < 3) {
+			return false;
+		}
+		else {
+			board.SetBoardSize(N, M);
+			board.GenerateBoard();
+		}
+	}
+	else if (type == 2) {
+		srand(time(NULL));
+		N = rand() % (max - min + 1) + min;
+		M = rand() % (max - min + 1) + min;
+		board.SetBoardSize(N, M);
+		board.GenerateBoard();
+	}
+	else if (type == 3) {
+		ifstream in("board.txt");
+
+		in >> N >> M;
+		if (N < 3 || M < 3) {
+			return false;
+		}
+		else {
+			vector<vector<char>> board_vec(N * 3, vector<char>(M * 3));
+			for (int row = 0; row < N * 3; ++row) {
+				for (int col = 0; col < M * 3; ++col) {
+					in >> board_vec[row][col];
+				}
+			}
+
+			board.SetBoardSize(N, M);
+			board.SetupBoard(board_vec);
+		}
+
+		in.close();
+	}
+	else {
+		return false;
+	}
+
+	return true;
+}
+
+bool Game::ServerRotatePipe(int x, int y) {
+	if (0 > x || x >= board.COL) return false;
+	if (0 > y || y >= board.ROW) return false;
+
+	board.RotatePipe(x, y);
+	board.InjectWater();
+	board.PrintBoard(x, y);
+	return true;
+}
+
+void Game::ServerGetBoard() {
+
 }
