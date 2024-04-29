@@ -8,18 +8,18 @@
 
 using namespace std;
 
-enum class Corner {
-	LeftUp,
-	LeftDown,
-	RightUp,
-	RightDown,
+enum class Direction {
+	Up,
+	Down,
+	Left,
+	Right,
 };
 
 class Board {
 private:
 	// for random board generation
-	Corner startCorner;
-	Corner endCorner;
+	Direction startPos;
+	Direction endPos;
 
 	pair<int, int> startPosition;
 	pair<int, int> endPosition;

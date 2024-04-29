@@ -7,9 +7,9 @@ PPP PPP PPP PPP
 PPP PPP #PP #P#
 #P# #P# #P# #P#
 
-#P# ### #P# ###
-PPP #PP #P# PPP
-### #P# #P# ###
+#P# ### #P# #P#
+PPP #PP #P# #P#
+### #P# #P# #P#
 
 #P# #P# #P# #P#
 #P# PPP #P# #P#
