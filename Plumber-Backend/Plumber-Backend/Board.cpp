@@ -63,10 +63,7 @@ void Board::GenerateBoard() {
 	srand(time(NULL));
 
 	startPos = static_cast<Direction>(rand() % 4);
-	do {
-		endPos = static_cast<Direction>(rand() % 4);
-	} while (startPos == endPos);
-
+	
 	switch (startPos)
 	{
 	case Direction::Up:
@@ -82,22 +79,26 @@ void Board::GenerateBoard() {
 		startPosition = { rand() % ROW, COL - 1 };
 		break;
 	}
-	
-	switch (endPos)
-	{
-	case Direction::Up:
-		endPosition = { 0, rand() % COL };
-		break;
-	case Direction::Down:
-		endPosition = { ROW - 1, rand() % COL };
-		break;
-	case Direction::Left:
-		endPosition = { rand() % ROW, 0 };
-		break;
-	case Direction::Right:
-		endPosition = { rand() % ROW, COL - 1 };
-		break;
-	}
+
+	do {
+		endPos = static_cast<Direction>(rand() % 4);
+
+		switch (endPos)
+		{
+		case Direction::Up:
+			endPosition = { 0, rand() % COL };
+			break;
+		case Direction::Down:
+			endPosition = { ROW - 1, rand() % COL };
+			break;
+		case Direction::Left:
+			endPosition = { rand() % ROW, 0 };
+			break;
+		case Direction::Right:
+			endPosition = { rand() % ROW, COL - 1 };
+			break;
+		}
+	} while (startPos == endPos || startPosition == endPosition);
 
 	for (int row = 0; row < ROW; ++row) {
 		for (int col = 0; col < COL; ++col) {
