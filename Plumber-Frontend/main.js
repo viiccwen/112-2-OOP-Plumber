@@ -20,10 +20,17 @@ document.getElementById('start-button').addEventListener('click', function() {
     var boardRow = document.getElementById('board-row').value;
     var boardColumn = document.getElementById('board-column').value;
 
+    
+
     const modes = ['customBoard','randomBoard','readBoardFile']
     var modeIndex =  modes.indexOf(gameMode);
 
     if (modeIndex === 0) {
+        if(boardRow < 3 || boardRow > 20 || boardColumn < 3 || boardColumn > 20) {
+            alert("請輸入3~20的數字!")
+            return;
+        }
+        
         startGame(modeIndex+1, boardRow, boardColumn);
     }else{
         startGame(modeIndex+1, 0, 0);
@@ -62,6 +69,7 @@ function startGame(gameMode, boardRow, boardColumn) {
         document.getElementById('game-option-container').style.display = 'none';
         document.getElementById('game-board-container').style.display = 'block';
         generateBoard(gameMode, boardRow, boardColumn);
+        updateBoard();
     })
     .catch(error => console.error('Error starting new game:', error));
 }
@@ -178,7 +186,8 @@ function updateBoard() {
                 });
 
                 if (board.isGameOver) {
-                    document.getElementById('game-board-container').style.display = 'none';
+                    // document.getElementById('game-board-container').style.display = 'none';
+                    console.log("stage clear!");
                     document.getElementById('game-over-container').style.display = 'block';
                 }
 
