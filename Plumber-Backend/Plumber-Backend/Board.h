@@ -38,6 +38,9 @@ public:
 	pair<int, int> GetEndPosition();
 	void SetBoardSize(int& row, int& col);
 	void SetPipe(int x, int y, Type type, int rotation);
+	Pipe GetPipe(int x, int y);
+	bool GetIsSolution(int x, int y);
+
 	void RotatePipe(int x, int y);
 	void GenerateBoard();
 	void SetupBoard(vector<vector<char>> board_vec);

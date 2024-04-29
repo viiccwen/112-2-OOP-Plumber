@@ -116,6 +116,10 @@ void Game::StartGame() {
 	}
 }
 
+Board Game::GetBoard() {
+	return board;
+}
+
 
 bool Game::ServerChooseMode(int type, int n = 3, int m = 3) {
 	int min = 3;
@@ -132,6 +136,7 @@ bool Game::ServerChooseMode(int type, int n = 3, int m = 3) {
 		else {
 			board.SetBoardSize(N, M);
 			board.GenerateBoard();
+			board.InjectWater();
 		}
 	}
 	else if (type == 2) {
@@ -140,6 +145,7 @@ bool Game::ServerChooseMode(int type, int n = 3, int m = 3) {
 		M = rand() % (max - min + 1) + min;
 		board.SetBoardSize(N, M);
 		board.GenerateBoard();
+		board.InjectWater();
 	}
 	else if (type == 3) {
 		ifstream in("board.txt");
@@ -158,6 +164,7 @@ bool Game::ServerChooseMode(int type, int n = 3, int m = 3) {
 
 			board.SetBoardSize(N, M);
 			board.SetupBoard(board_vec);
+			board.InjectWater();
 		}
 
 		in.close();
@@ -170,8 +177,8 @@ bool Game::ServerChooseMode(int type, int n = 3, int m = 3) {
 }
 
 bool Game::ServerRotatePipe(int x, int y) {
-	if (0 > x || x >= board.COL) return false;
-	if (0 > y || y >= board.ROW) return false;
+	if (0 > x || x >= board.ROW) return false;
+	if (0 > y || y >= board.COL) return false;
 
 	board.RotatePipe(x, y);
 	board.InjectWater();
@@ -179,6 +186,3 @@ bool Game::ServerRotatePipe(int x, int y) {
 	return true;
 }
 
-void Game::ServerGetBoard() {
-
-}

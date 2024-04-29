@@ -16,6 +16,8 @@ private:
 	http_listener listener;
 	void handle_get(http_request request);
 	void handle_post(http_request request);
+	void handle_options(http_request request);
+	void set_cors_headers(http_response& response);
 public:
 	HttpServer(utility::string_t url);
 	void start();

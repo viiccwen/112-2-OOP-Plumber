@@ -13,6 +13,10 @@ pair<int, int> Board::GetStartPosition() {
 	return startPosition;
 }
 
+pair<int, int> Board::GetEndPosition() {
+	return endPosition;
+}
+
 void Board::SetBoardSize(int& row, int& col) {
 	ROW = row;
 	COL = col;
@@ -21,6 +25,14 @@ void Board::SetBoardSize(int& row, int& col) {
 void Board::SetPipe(int x, int y, Type type, int rotation) {
 	board[x][y].SetType(type);
 	board[x][y].SetRotation(rotation);
+}
+
+Pipe Board::GetPipe(int x, int y) {
+	return board[x][y];
+}
+
+bool Board::GetIsSolution(int x, int y) {
+	return isSolution[x][y];
 }
 
 void Board::RotatePipe(int x, int y) {
