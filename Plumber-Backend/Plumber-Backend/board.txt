@@ -1,20 +1,16 @@
-5 4
-#P# ### ### #P#
-PPP PPP PPP PPP
-#P# ### ### #P#
+4 5
+#P# #P# ### #P# #P#
+PP# PPP PPP PPP PP#
+### #P# ### #P# ###
 
-#P# #P# ### #P#
-PPP PPP #PP #P#
-#P# #P# #P# #P#
+#P# #P# #P# #P# #P#
+PPP PPP PP# PPP PPP
+#P# #P# ### ### ###
 
-#P# ### #P# ###
-PPP #PP #P# PPP
-### #P# #P# ###
+### ### ### ### ###
+PPP PPP PPP PPP PPP
+### ### ### ### ###
 
-#P# #P# #P# #P#
-#P# PPP #P# #P#
-#P# ### #P# #P#
-
-### ### ### #P#
-PP# #PP #PP PP#
-#P# #P# #P# #P#
+### ### ### #P# ###
+PPP PPP PPP PP# PPP
+### ### ### ### ###

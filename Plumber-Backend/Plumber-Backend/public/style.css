@@ -1,0 +1,146 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: auto;
+}
+
+#game-option-container {
+    background-color: white;
+    width: 300px;
+    padding: 40px;
+    border-radius: 40px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    
+}
+
+input[type="number"] {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 95%;  /* 略小於全寬以適應邊界 */
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.title {
+    text-align: center;
+    font-size: 40px;
+    font-family:Arial, Helvetica, sans-serif;
+}
+.icon{
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    display: block;
+}
+
+select, button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.pipe {
+    border: 1px solid #ccc;
+    border-radius: 1px;
+    float: left;
+    transition: transform 0.3s ease-in-out; /* 添加旋轉動畫效果 */
+    cursor: pointer; /* 讓用戶知道這些元素是可以點擊的 */
+    background-size: cover;
+    filter: opacity(0.3);
+}
+
+.row {
+    clear: both;
+}
+
+#game-board-container {
+    display: none;
+    width: auto;
+    height: auto;
+    padding: 40px;
+    border-radius: 40px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#game-over-container {
+    display: none;
+    background-color: white;
+    width: 300px;
+    padding: 40px;
+    border-radius: 40px;
+    margin: auto;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: absolute;
+}
+
+
+.cross-pipe {
+    background-image: url('./assests/img/cross-shape.png'); /* 假設您有一個代表十字水管的圖片 */
+    background-size: cover;  /* 確保圖片覆蓋整個元素 */
+}
+
+.straight-pipe {
+    background-image: url('./assests/img/straight-shape.png'); /* 假設您有一個代表直水管的圖片 */
+    background-size: cover;  /* 確保圖片覆蓋整個元素 */
+}
+
+.elbow-pipe {
+    background-image: url('./assests/img/elbow-shape.png'); /* 假設您有一個代表彎水管的圖片 */
+    background-size: cover;  /* 確保圖片覆蓋整個元素 */
+}
+
+.t-pipe {
+    background-image: url('./assests/img/t-shape.png'); /* 假設您有一個代表T字水管的圖片 */
+    background-size: cover;  /* 確保圖片覆蓋整個元素 */
+}
+
+.cross-pipe-watered {
+    background-image: url('./assests/img/cross-shape-watered.png'); /* 假設您有一個代表十字水管的圖片 */
+    background-size: cover;  /* 確保圖片覆蓋整個元素 */
+}
+
+.straight-pipe-watered {
+    background-image: url('./assests/img/straight-shape-watered.png'); /* 假設您有一個代表直水管的圖片 */
+    background-size: cover;  /* 確保圖片覆蓋整個元素 */
+}
+
+.elbow-pipe-watered {
+    background-image: url('./assests/img/elbow-shape-watered.png'); /* 假設您有一個代表彎水管的圖片 */
+    background-size: cover;  /* 確保圖片覆蓋整個元素 */
+}
+
+.t-pipe-watered {
+    background-image: url('./assests/img/t-shape-watered.png'); /* 假設您有一個代表T字水管的圖片 */
+    background-size: cover;  /* 確保圖片覆蓋整個元素 */
+}
+
+.start-position {
+    filter: opacity(0.8) drop-shadow(0 0 0 #0079FF);
+}
+
+.end-position {
+    filter: opacity(0.8) drop-shadow(0 0 0 #00DFA2);
+}
+
+.solution-position {
+    filter: opacity(1);
+}

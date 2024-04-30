@@ -8,18 +8,18 @@
 
 using namespace std;
 
-enum class Corner {
-	LeftUp,
-	LeftDown,
-	RightUp,
-	RightDown,
+enum class Direction {
+	Up,
+	Down,
+	Left,
+	Right,
 };
 
 class Board {
 private:
 	// for random board generation
-	Corner startCorner;
-	Corner endCorner;
+	Direction startPos;
+	Direction endPos;
 
 	pair<int, int> startPosition;
 	pair<int, int> endPosition;
@@ -35,16 +35,21 @@ public:
 	static int COL;
 
 	pair<int, int> GetStartPosition();
+	void SetStartPosition(pair<int, int> pos);
 	pair<int, int> GetEndPosition();
+	void SetEndPosition(pair<int, int> pos);
 	void SetBoardSize(int& row, int& col);
 	void SetPipe(int x, int y, Type type, int rotation);
+	Pipe GetPipe(int x, int y);
+	bool GetIsSolution(int x, int y);
+
 	void RotatePipe(int x, int y);
 	void GenerateBoard();
 	void SetupBoard(vector<vector<char>> board_vec);
 	void GenerateSolution();
 	void PrintBoard(const int& x, const int& y) const;
 	void InjectWater();
-	bool FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>>& solution, vector<vector<bool>>& visited);
+	bool FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>>& solution, vector<vector<bool>>& visited, bool isFirst = false);
 	bool IsGameOver();
 private:
 	vector<vector<Pipe>> board;

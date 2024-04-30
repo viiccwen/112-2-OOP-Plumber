@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>Plumber | 水管工</title>
+	<link rel="icon" href="./assests/img/cross-shape-watered.png" type="image/x-icon">
+</head>
+
+<body>
+	<div id="game-option-container">
+		<img class="icon" src="./assests/img/cross-shape-watered.png" alt="Plumber Logo" id="logo">
+		<h1 class="title">Plumber</h1>
+		<div id="game-mode-selection">
+			<label for="game-mode">Choose Game Mode:</label>
+			<select id="game-mode">
+				<option value="customBoard">Custom Board</option>
+				<option value="randomBoard">Random Board</option>
+				<option value="readBoardFile">Read Board File</option>
+			</select>
+		</div>
+		<div id="board-size-selection">
+			<label for="board-width">Board Row:</label>
+			<input type="number" id="board-row" placeholder="Board Row" value="3">
+			<label for="board-height">Board Column:</label>
+			<input type="number" id="board-column" placeholder="Board Column" value="3">
+		</div>
+		<button id="start-button">Start Game</button>
+	</div>
+
+	<div id="game-board-container">
+	</div>
+
+	<div id="game-over-container">
+		<h1 class="title">Stage Clear!</h1>
+		<button id="restart-button">Back</button>
+	</div>
+
+	<script src="main.js"></script>
+	<audio id="rotate-sound" src="./assests/audio/rotate.mp3"></audio>
+	<audio id="success-sound" src="./assests/audio/success.mp3"></audio>
+	<audio id="background-sound" src="./assests/audio/bgm.mp3"></audio>
+</body>
+</html>

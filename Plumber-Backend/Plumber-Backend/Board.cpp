@@ -13,6 +13,10 @@ pair<int, int> Board::GetStartPosition() {
 	return startPosition;
 }
 
+pair<int, int> Board::GetEndPosition() {
+	return endPosition;
+}
+
 void Board::SetBoardSize(int& row, int& col) {
 	ROW = row;
 	COL = col;
@@ -21,6 +25,14 @@ void Board::SetBoardSize(int& row, int& col) {
 void Board::SetPipe(int x, int y, Type type, int rotation) {
 	board[x][y].SetType(type);
 	board[x][y].SetRotation(rotation);
+}
+
+Pipe Board::GetPipe(int x, int y) {
+	return board[x][y];
+}
+
+bool Board::GetIsSolution(int x, int y) {
+	return isSolution[x][y];
 }
 
 void Board::RotatePipe(int x, int y) {
@@ -50,46 +62,43 @@ void Board::GenerateBoard() {
 
 	srand(time(NULL));
 
-	startCorner = static_cast<Corner>(rand() % 4);
+	startPos = static_cast<Direction>(rand() % 4);
+	
+	switch (startPos)
+	{
+	case Direction::Up:
+		startPosition = { 0, rand() % COL };
+		break;
+	case Direction::Down:
+		startPosition = { ROW - 1, rand() % COL };
+		break;
+	case Direction::Left:
+		startPosition = { rand() % ROW, 0 };
+		break;
+	case Direction::Right:
+		startPosition = { rand() % ROW, COL - 1 };
+		break;
+	}
+
 	do {
-		endCorner = static_cast<Corner>(rand() % 4);
-	} while (startCorner == endCorner);
+		endPos = static_cast<Direction>(rand() % 4);
 
-	switch (startCorner)
-	{
-	case Corner::LeftUp:
-		startPosition = { 0, 0 };
-		break;
-	case Corner::LeftDown:
-		startPosition = { ROW - 1, 0 };
-		break;
-	case Corner::RightUp:
-		startPosition = { 0, COL - 1 };
-		break;
-	case Corner::RightDown:
-		startPosition = { ROW - 1, COL - 1 };
-		break;
-	default:
-		break;
-	}
-
-	switch (endCorner)
-	{
-	case Corner::LeftUp:
-		endPosition = { 0, 0 };
-		break;
-	case Corner::LeftDown:
-		endPosition = { ROW - 1, 0 };
-		break;
-	case Corner::RightUp:
-		endPosition = { 0, COL - 1 };
-		break;
-	case Corner::RightDown:
-		endPosition = { ROW - 1, COL - 1 };
-		break;
-	default:
-		break;
-	}
+		switch (endPos)
+		{
+		case Direction::Up:
+			endPosition = { 0, rand() % COL };
+			break;
+		case Direction::Down:
+			endPosition = { ROW - 1, rand() % COL };
+			break;
+		case Direction::Left:
+			endPosition = { rand() % ROW, 0 };
+			break;
+		case Direction::Right:
+			endPosition = { rand() % ROW, COL - 1 };
+			break;
+		}
+	} while (startPos == endPos || startPosition == endPosition);
 
 	for (int row = 0; row < ROW; ++row) {
 		for (int col = 0; col < COL; ++col) {
@@ -109,9 +118,37 @@ void Board::GenerateBoard() {
 	GenerateSolution();
 }
 
-bool Board::FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>>& solution, vector<vector<bool>>& visited) {
+bool Board::FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>>& solution, vector<vector<bool>>& visited, bool isFirst) {
 	int curX = cur_pos.first;
 	int curY = cur_pos.second;
+
+	if (isFirst) {
+		Pipe &curPipe = dup_board.board[curX][curY];
+
+		int rotation_limit = 1;
+		switch (curPipe.GetType())
+		{
+		case Type::Straight:
+			rotation_limit = 2;
+			break;
+		case Type::TShape:
+			rotation_limit = 4;
+			break;
+		case Type::Corner:
+			rotation_limit = 4;
+			break;
+		case Type::Cross:
+			rotation_limit = 1;
+			break;
+		}
+
+		for (int j = 0; j < rotation_limit; ++j) {
+			int rotation = j * 90;
+			curPipe.SetRotation(rotation);
+
+			if (FindSolutionPath(dup_board, { curX, curY }, end_pos, solution, visited)) return true;
+		}
+	}
 
 	solution.push_back({ curX, curY });
 	visited[curX][curY] = true;
@@ -173,13 +210,12 @@ void Board::GenerateSolution() {
 
 	Board dup_board;
 	dup_board.board = board;
-	if (FindSolutionPath(dup_board, startPosition, endPosition, solution, visited)) {
+	if (FindSolutionPath(dup_board, startPosition, endPosition, solution, visited, true)) {
 		for (auto pir : solution) {
 			isSolution[pir.first][pir.second] = true;
 		}
 	}
 	else GenerateBoard();
-
 }
 
 // for color (from google)
@@ -252,8 +288,6 @@ void Board::InjectWater() {
 	int startX = startPosition.first;
 	int startY = startPosition.second;
 
-	if (!board[startX][startY].GetConnected()[3]) return;
-
 	queue<pair<int, int>> q;
 
 	q.push({ startX,startY });
@@ -291,4 +325,12 @@ void Board::InjectWater() {
 
 bool Board::IsGameOver() {
 	return board[endPosition.first][endPosition.second].GetWatered();
+}
+
+void Board::SetStartPosition(pair<int, int> pos) {
+	startPosition = pos;
+}
+
+void Board::SetEndPosition(pair<int, int> pos) {
+	endPosition = pos;
 }
