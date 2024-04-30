@@ -105,12 +105,18 @@ function generateBoard(gameMode, boardRow, boardColumn) {
     var boardContainer = document.getElementById('game-board-container');
     boardContainer.innerHTML = ''; // 清空現有的遊戲面板
 
+    let maxSide = Math.max(boardRow, boardColumn);
+    let pipeSize = 100 - (maxSide - 3) * 2.5;
+
     board.board.forEach((row, i) => {
         const domRow = document.createElement('div');
         domRow.className = 'row';
 
         row.forEach((pipeData, j) => {
             const pipe = generatePipe(pipeData,i,j);
+            pipe.style.width = pipeSize + 'px';
+            pipe.style.height = pipeSize + 'px';
+            
             domRow.appendChild(pipe);
         });
         boardContainer.appendChild(domRow);

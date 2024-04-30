@@ -34,6 +34,12 @@ input[type="number"] {
     font-size: 40px;
     font-family:Arial, Helvetica, sans-serif;
 }
+.icon{
+    width: 100px;
+    height: 100px;
+    margin: auto;
+    display: block;
+}
 
 select, button {
     margin-top: 10px;
@@ -52,10 +58,8 @@ button {
 }
 
 .pipe {
-    width: 80px;
-    height: 80px; 
-    border: 4px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid #ccc;
+    border-radius: 1px;
     float: left;
     transition: transform 0.3s ease-in-out; /* 添加旋轉動畫效果 */
     cursor: pointer; /* 讓用戶知道這些元素是可以點擊的 */
