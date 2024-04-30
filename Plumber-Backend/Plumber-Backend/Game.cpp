@@ -183,7 +183,6 @@ bool Game::ServerRotatePipe(int x, int y) {
 
 	board.RotatePipe(x, y);
 	board.InjectWater();
-	board.PrintBoard(x, y);
 	return true;
 }
 

@@ -3,6 +3,7 @@
 
 #include <cpprest/http_listener.h>
 #include <cpprest/json.h>
+#include <cpprest/filestream.h>  // For file streams
 #include "Game.h"
 
 using namespace web;
@@ -18,6 +19,8 @@ private:
 	void handle_post(http_request request);
 	void handle_options(http_request request);
 	void set_cors_headers(http_response& response);
+	void serve_static_file(const utility::string_t& file_path, http_request& request);
+	utility::string_t get_content_type(const utility::string_t& path);
 public:
 	HttpServer(utility::string_t url);
 	void start();
