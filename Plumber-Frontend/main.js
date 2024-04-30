@@ -2,6 +2,10 @@ const rootURL = 'http://localhost:8080';
 
 var board = {};
 
+var bgm = document.getElementById('background-sound');
+var rotateSound = document.getElementById('rotate-sound');
+var successSound = document.getElementById('success-sound');
+
 document.getElementById('game-mode').addEventListener('change', function() {
     var selectedMode = this.value;
     var boardSizeSelection = document.getElementById('board-size-selection');
@@ -19,8 +23,6 @@ document.getElementById('start-button').addEventListener('click', function() {
     var gameMode = document.getElementById('game-mode').value;
     var boardRow = document.getElementById('board-row').value;
     var boardColumn = document.getElementById('board-column').value;
-
-    
 
     const modes = ['customBoard','randomBoard','readBoardFile']
     var modeIndex =  modes.indexOf(gameMode);
@@ -70,6 +72,11 @@ function startGame(gameMode, boardRow, boardColumn) {
         document.getElementById('game-board-container').style.display = 'block';
         generateBoard(gameMode, boardRow, boardColumn);
         updateBoard();
+
+        bgm = document.getElementById('background-sound');
+        bgm.currentTime = 0; // 重置音效播放時間，確保可以連續播放
+        bgm.loop = true;
+        bgm.play();
     })
     .catch(error => console.error('Error starting new game:', error));
 }
@@ -155,10 +162,11 @@ function rotatePipe(pipe,x,y) {
         currentRotation += 90;
         pipe.style.transform = `rotate(${currentRotation}deg)`;
         
-        var sound = document.getElementById('rotate-sound');
-        sound.currentTime = 0; // 重置音效播放時間，確保可以連續播放
-        sound.play();
         updateBoard();
+
+        rotateSound = document.getElementById('rotate-sound');
+        rotateSound.currentTime = 0; // 重置音效播放時間，確保可以連續播放
+        rotateSound.play();
     })
     .catch(error => console.error('Error rotating pipe:', error));
 }
@@ -186,9 +194,13 @@ function updateBoard() {
                 });
 
                 if (board.isGameOver) {
-                    // document.getElementById('game-board-container').style.display = 'none';
                     console.log("stage clear!");
                     document.getElementById('game-over-container').style.display = 'block';
+
+                    bgm.pause();
+                    successSound = document.getElementById('success-sound');
+                    successSound.currentTime = 0; // 重置音效播放時間，確保可以連續播放
+                    successSound.play();
                 }
 
             } else {
