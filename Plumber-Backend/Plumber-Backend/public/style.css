@@ -67,6 +67,10 @@ button {
     filter: opacity(0.3);
 }
 
+.pipe:hover {
+    filter: opacity(0.8);
+}
+
 .row {
     clear: both;
 }
