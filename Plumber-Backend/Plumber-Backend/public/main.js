@@ -1,4 +1,4 @@
-const rootURL = 'http://localhost:8080';
+const rootURL = '.';
 
 var board = {};
 
