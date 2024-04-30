@@ -35,7 +35,9 @@ public:
 	static int COL;
 
 	pair<int, int> GetStartPosition();
+	void SetStartPosition(pair<int, int> pos);
 	pair<int, int> GetEndPosition();
+	void SetEndPosition(pair<int, int> pos);
 	void SetBoardSize(int& row, int& col);
 	void SetPipe(int x, int y, Type type, int rotation);
 	Pipe GetPipe(int x, int y);
@@ -47,7 +49,7 @@ public:
 	void GenerateSolution();
 	void PrintBoard(const int& x, const int& y) const;
 	void InjectWater();
-	bool FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>>& solution, vector<vector<bool>>& visited);
+	bool FindSolutionPath(Board& dup_board, pair<int, int> cur_pos, pair<int, int>& end_pos, vector<pair<int, int>>& solution, vector<vector<bool>>& visited, bool isFirst = false);
 	bool IsGameOver();
 private:
 	vector<vector<Pipe>> board;

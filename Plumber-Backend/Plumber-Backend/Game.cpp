@@ -161,6 +161,7 @@ bool Game::ServerChooseMode(int type, int n = 3, int m = 3) {
 					in >> board_vec[row][col];
 				}
 			}
+			
 
 			board.SetBoardSize(N, M);
 			board.SetupBoard(board_vec);
