@@ -1,12 +1,20 @@
+<div align="center">
+
 # 112-2 Project 1 - Plumber
 
-瘋狂接水管
+  <img width="200" src="/Plumber-Backend/Plumber-Backend/public/assests/img/cross-shape-watered.png" alt="logo" style="border-radius:1em">
+
+### 瘋狂接水管
+
+</div>
+
 
 ## Member
 B11215005 温冠華(組長)
 B11215063 吳盛瑋
 ## Quick Start
-使用Visual Studio 編譯並執行
+1. 使用Visual Studio 編譯並執行
+2. 使用瀏覽器打開終端機內 `Game URL` (需使用 Chromium 瀏覽器，Edge 即可)
 ## Contribution
 
 ### 温冠華
@@ -26,13 +34,21 @@ B11215063 吳盛瑋
 - 水管旋轉及對接功能
 - BFS 水流演算法
 - 前後端架構規劃
-- CLI 後端轉換
+- CLI<->後端轉換
     - 取得盤面接口
     - 旋轉水管接口 
     - 遊戲開始接口
+    - OPTIONS method handle (for JS CORS)
 - 水管圖片製作
 - 前端開發
-    - 遊戲模式選擇介面
-    - 盤面生成及對接
-- BGM 播放
-- 遊戲音效
+    - 遊戲模式選擇介面及後端串接
+    - 盤面生成及接口對接
+    - 動態調整水管大小
+    - 水管動畫及後端串接
+    - 盤面更新 (注水)
+    - 遊戲結束介面
+- 音效播放
+    - BGM 播放 
+    - 水管旋轉音效
+    - 遊戲結束音效
+- 改使用 CppRest 統一架設前端及 API
