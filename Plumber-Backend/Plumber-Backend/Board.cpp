@@ -62,44 +62,40 @@ void Board::GenerateBoard() {
 
 	srand(time(NULL));
 
-	startCorner = static_cast<Corner>(rand() % 4);
+	startPos = static_cast<Direction>(rand() % 4);
 	do {
-		endCorner = static_cast<Corner>(rand() % 4);
-	} while (startCorner == endCorner);
+		endPos = static_cast<Direction>(rand() % 4);
+	} while (startPos == endPos);
 
-	switch (startCorner)
+	switch (startPos)
 	{
-	case Corner::LeftUp:
-		startPosition = { 0, 0 };
+	case Direction::Up:
+		startPosition = { 0, rand() % COL };
 		break;
-	case Corner::LeftDown:
-		startPosition = { ROW - 1, 0 };
+	case Direction::Down:
+		startPosition = { ROW - 1, rand() % COL };
 		break;
-	case Corner::RightUp:
-		startPosition = { 0, COL - 1 };
+	case Direction::Left:
+		startPosition = { rand() % ROW, 0 };
 		break;
-	case Corner::RightDown:
-		startPosition = { ROW - 1, COL - 1 };
-		break;
-	default:
+	case Direction::Right:
+		startPosition = { rand() % ROW, COL - 1 };
 		break;
 	}
-
-	switch (endCorner)
+	
+	switch (endPos)
 	{
-	case Corner::LeftUp:
-		endPosition = { 0, 0 };
+	case Direction::Up:
+		endPosition = { 0, rand() % COL };
 		break;
-	case Corner::LeftDown:
-		endPosition = { ROW - 1, 0 };
+	case Direction::Down:
+		endPosition = { ROW - 1, rand() % COL };
 		break;
-	case Corner::RightUp:
-		endPosition = { 0, COL - 1 };
+	case Direction::Left:
+		endPosition = { rand() % ROW, 0 };
 		break;
-	case Corner::RightDown:
-		endPosition = { ROW - 1, COL - 1 };
-		break;
-	default:
+	case Direction::Right:
+		endPosition = { rand() % ROW, COL - 1 };
 		break;
 	}
 
@@ -191,7 +187,6 @@ void Board::GenerateSolution() {
 		}
 	}
 	else GenerateBoard();
-
 }
 
 // for color (from google)
