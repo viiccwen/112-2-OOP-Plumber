@@ -144,7 +144,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="HttpSever.cpp" />
+    <ClCompile Include="HttpServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Board.h" />
