@@ -95,7 +95,7 @@ button {
 }
 
 .straight-pipe {
-    background-image: url('.//assests/img/straight-shape.png'); /* 假設您有一個代表直水管的圖片 */
+    background-image: url('./assests/img/straight-shape.png'); /* 假設您有一個代表直水管的圖片 */
     background-size: cover;  /* 確保圖片覆蓋整個元素 */
 }
 

@@ -3,9 +3,13 @@
 
 void HttpServer::handle_get(http_request request) {
 	request.headers().add(U("Access-Control-Allow-Origin"), U("*"));
-	ucout << "GET request received" << std::endl;
 
-	if (request.relative_uri().path() == U("/board")) {
+	auto path = request.relative_uri().path();
+	utility::string_t file_path;
+
+	ucout << "GET " << path << std::endl;
+
+	if (path == U("/board")) {
 		json::value response_data;
 
 		Board board = game.GetBoard();
@@ -41,8 +45,6 @@ void HttpServer::handle_get(http_request request) {
 			json_board[i] = json_row;
  		}
 
-		board.PrintBoard(0, 0);
-
 		response_data[U("board")] = json_board;
 		response_data[U("isGameOver")] = board.IsGameOver();
 		response_data[U("status")] = json::value::boolean(true);
@@ -52,18 +54,21 @@ void HttpServer::handle_get(http_request request) {
 		set_cors_headers(response);
 		request.reply(response);
 	}
-	else {
-		json::value response_data;
-		response_data[U("status")] = json::value::boolean(false);
-		request.reply(status_codes::NotFound, response_data);
+	else if (path.empty() || path == U("/") || path == U("")) {
+		file_path = U("./public/index.html");  // Default to serving index.html
 	}
+	else {
+		file_path = U("./public") + path;
+	}
+
+	serve_static_file(file_path, request);
 }
 
 void HttpServer::handle_post(http_request request) {
 	request.headers().add(U("Access-Control-Allow-Origin"), U("*"));
-	ucout << "POST request received" << std::endl;
-
 	auto path = request.relative_uri().path();
+
+	ucout << "POST " << path << std::endl;
 	if (path == U("/newGame")) {
 		request.extract_json().then([=](json::value val) {
 			ucout << "Starting new game with mode: " << val[U("mode")].as_integer() << std::endl;
@@ -110,6 +115,38 @@ void HttpServer::handle_post(http_request request) {
 	}
 }
 
+void HttpServer::serve_static_file(const utility::string_t& file_path, http_request& request) {
+	concurrency::streams::istream fileStream;
+	try {
+		fileStream = concurrency::streams::fstream::open_istream(file_path, std::ios::in).get();
+		auto content_type = get_content_type(file_path);
+		request.reply(status_codes::OK, fileStream, content_type).then([fileStream](pplx::task<void> t) {
+			try {
+				t.get();
+				fileStream.close().get(); // Close the stream
+			}
+			catch (...) {
+				
+			}
+			});
+	}
+	catch (const std::exception& e) {
+		ucout << "Failed to open file: " << file_path << ':' << e.what() << std::endl;
+		request.reply(status_codes::NotFound, U("File not found"));
+	}
+}
+
+utility::string_t HttpServer::get_content_type(const utility::string_t& path) {
+	auto ext = path.substr(path.find_last_of(U('.')) + 1);
+	if (ext == U("html")) return U("text/html");
+	if (ext == U("css")) return U("text/css");
+	if (ext == U("js")) return U("application/javascript");
+	if (ext == U("png")) return U("image/png");
+	if (ext == U("jpg") || ext == U("jpeg")) return U("image/jpeg");
+	if (ext == U("gif")) return U("image/gif");
+	return U("application/octet-stream"); // Default MIME type
+}
+
 void HttpServer::handle_options(http_request request) {
 	ucout << "OPTIONS request received\n";
 
@@ -138,7 +175,7 @@ HttpServer::HttpServer(utility::string_t url) : listener(url) {
 void HttpServer::start() {
 	try {
 		listener.open().wait();
-		ucout << "HTTP server started at: " << listener.uri().to_string() << std::endl;
+		ucout << "Game URL: " << listener.uri().to_string() << std::endl;
 	}
 	catch (const std::exception& e) {
 		std::cerr << "An error occurred: " << e.what() << std::endl;

@@ -1,12 +1,12 @@
 # 112-2 Project 1 - Plumber
-<專案描述，隨便你寫>
+
+瘋狂接水管
+
 ## Member
 B11215005 温冠華(組長)
-B11215063 吳盛偉
+B11215063 吳盛瑋
 ## Quick Start
-<描述專案該如何啟動，比方說需不需要安裝其他的 plugins>
-如果有使用到外部的 Library、Visual Studio 以外的工具等，需提供build script
-.ps1 / .bat / .sh / CMake Config / Make File / Ninja 等格式<僅使用 Visual Studio，就寫”Visual Studio 編譯並執行”即可>
+使用Visual Studio 編譯並執行
 ## Contribution
 
 ### 温冠華
